@@ -33,22 +33,22 @@ def total_parts(bom):
 
 # Calculate the total volume.
 def total_volume(bom):
-    total_volume = 0.0
+    total = 0.0
     for part in bom:
-        total_volume += part["quantity"] * part["volume_cm3"]  # cm3
-    return total_volume
+        total += part["quantity"] * part["volume_cm3"]  # cm3
+    return total
 
 
 # Calculate the total cost.
 def total_cost(bom):
-    total_cost = 0.0
+    total = 0.0
     for part in bom:
-        total_cost += part["quantity"] * part["unit_cost"]
-    return total_cost
+        total += part["quantity"] * part["unit_cost"]
+    return total
 
 
 # Calculate the totals per material.
-def totals_by_materials(bom):
+def totals_by_material(bom):
     materials = [part["material"] for part in bom]
     unique_materials = list(dict.fromkeys(materials))
     materials_totals = {material: {} for material in unique_materials}
@@ -60,12 +60,26 @@ def totals_by_materials(bom):
     return materials_totals
 
 
-print(total_parts(bom))
-print(f"${total_cost(bom):.2f}")
-print(f"{total_volume(bom):.1f} cm\u00b3")
-results = totals_by_materials(bom)
-for material, totals in results.items():
-    print(material)
-    print(f"Parts: {totals['total_parts']}")
-    print(f"Volume: {totals['total_volume']:.1f} cm\u00b3")
-    print(f"Cost: ${totals['total_cost']:.2f}")
+# Print the report.
+def print_report(parts, cost, volume, materials):
+    print(parts)
+    print(f"${cost:.2f}")
+    print(f"{volume:.1f} cm\u00b3")
+    for material, totals in materials.items():
+        print(material)
+        print(f"Parts: {totals['total_parts']}")
+        print(f"Volume: {totals['total_volume']:.1f} cm\u00b3")
+        print(f"Cost: ${totals['total_cost']:.2f}")
+
+
+# Main function to run the report.
+def main(bom):
+    parts = total_parts(bom)
+    cost = total_cost(bom)
+    volume = total_volume(bom)
+    materials = totals_by_material(bom)
+    print_report(parts, cost, volume, materials)
+
+
+if __name__ == "__main__":
+    main(bom)
